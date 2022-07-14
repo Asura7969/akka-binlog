@@ -7,6 +7,7 @@ import akka.stream.stage.AbstractInHandler;
 import akka.stream.stage.GraphStage;
 import akka.stream.stage.GraphStageLogic;
 import com.asura.bigdata.conf.EndpointConf;
+import com.asura.bigdata.helper.TableSchema;
 import com.asura.bigdata.model.SqlOperatorRow;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
@@ -19,12 +20,15 @@ import java.util.List;
 public class JdbcSink extends GraphStage<SinkShape<SqlOperatorRow>> {
     private final EndpointConf jdbcConf;
     private HikariDataSource dataSource;
+
+    private TableSchema tableSchema;
     public final Inlet<SqlOperatorRow> in = Inlet.create("JdbcSink.in");
 
     private final SinkShape<SqlOperatorRow> shape = SinkShape.of(in);
 
-    public JdbcSink(EndpointConf jdbcConf) {
+    public JdbcSink(EndpointConf jdbcConf, TableSchema tableSchema) {
         this.jdbcConf = jdbcConf;
+        this.tableSchema = tableSchema;
     }
 
     @Override
